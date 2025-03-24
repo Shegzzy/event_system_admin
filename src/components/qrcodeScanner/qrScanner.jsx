@@ -1,3 +1,4 @@
+import "./qrcode.css";
 import React, { useState } from "react";
 import WebcamCapture from "../../components/webcamCapture/webcamCapture";
 import jsQR from 'jsqr';
@@ -20,7 +21,7 @@ const handleScan = (imageSrc) => {
             const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert"});
             if (code) {
                 setQrCode(code);
-                console.log("code: ", code);
+                console.log("code: ", qrCode);
             }
         }
     }
