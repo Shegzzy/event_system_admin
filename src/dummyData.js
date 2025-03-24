@@ -68,8 +68,7 @@ export const userData = [
     {
       id: 1,
       username: "Jon Snow",
-      avatar:
-        "https://images.pexels.com/photos/1152994/pexels-photo-1152994.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+      avatar: "https://images.pexels.com/photos/1152994/pexels-photo-1152994.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
       email: "jon@gmail.com",
       status: "active",
       transaction: "$120.00",

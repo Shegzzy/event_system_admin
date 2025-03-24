@@ -6,10 +6,19 @@ import EventsList from './components/eventsList';
 import Topbar from './components/topbar/Topbar';
 import Sidebar from './components/sidebar/Sidebar';
 import Home from './pages/home/Home';
-import UserList from './pages/userList/UserList';
+import EventList from './pages/eventList/EventList';
 import User from './pages/user/User';
+import React, { useState } from "react";
+import EditEvent from './components/editEvent/editEvent';
+import CreateEvent from './components/createEvent/createEvent';
+import AttendeeList from './pages/productList/AttendeeList';
+import AdminQRScanner from './components/qrcodeScanner/adminQRScanner';
+import QRScanner from './components/qrcodeScanner/qrScanner';
+
 
 function App() {
+  const [editingEvent, setEditingEvent] = useState(null);
+  
   return (
     <Router>
       <Topbar />
@@ -17,17 +26,18 @@ function App() {
         <Sidebar />
         <Routes>
           <Route exact path="/" element = {<Home />} />
-          <Route exact path="/users" element = {<UserList />} />
-          <Route exact path="/user/:userId" element = {<User />} />
+          <Route exact path="/events" element = {<EventList onEdit={(event) => setEditingEvent(event)}/>} />
+          <Route exact path="/events/:eventId" element = {<EditEvent
+            event={editingEvent}
+            onCancel={(event) => setEditingEvent(event)}
+            onUpdate={(updatedEvent) => {
+              setEditingEvent(updatedEvent);
+            }}/>} />
+          <Route exact path="/createEvent" element = {<CreateEvent />} />
+          <Route exact path="/attendees" element = {<AttendeeList />} />
+          <Route exact path="/scan" element = {<QRScanner />} />
         </Routes>
       </div>
-
-      {/* 
-      <Routes>
-        <Route path="/" element={<AdminDashboard />} />
-        <Route path="/events" element={<EventsList />} />
-      </Routes> 
-      */}
     </Router>
   );
 }

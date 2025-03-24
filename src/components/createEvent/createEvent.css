@@ -1,0 +1,98 @@
+.event-container {
+    /* max-width: 500px; */
+    /* margin: 40px auto; */
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    flex: 6;
+  }
+  /* 
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .event-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  input, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  textarea {
+    resize: none;
+    height: 80px;
+  }
+  
+  .meal-options, .table-section {
+    margin-top: 10px;
+  }
+  
+  h4 {
+    margin-bottom: 5px;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  ul li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background: #f4f4f4;
+    margin-top: 5px;
+    border-radius: 5px;
+  }
+  
+  ul li button {
+    background: none;
+    border: none;
+    color: red;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .table-input {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .submit-btn {
+    background: #28a745;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .submit-btn:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+  }
+  
+  /* Loader Animation */
+  /* .loader {
+    width: 20px;
+    height: 20px;
+    border: 3px solid white;
+    border-top: 3px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }*/ 

@@ -1,11 +1,11 @@
-import "./productList.css";
-import { DataGrid } from "@material-ui/data-grid";
-import { DeleteOutline } from "@material-ui/icons";
+import "./attendeeList.css";
+import { DataGrid } from "@mui/x-data-grid";
+import { DeleteOutline } from "@mui/icons-material";
 import { productRows } from "../../dummyData";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-export default function ProductList() {
+export default function AttendeeList() {
   const [data, setData] = useState(productRows);
 
   const handleDelete = (id) => {

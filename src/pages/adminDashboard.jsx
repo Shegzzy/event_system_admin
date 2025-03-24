@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import EventsList from "../components/eventsList";
-import CreateEvent from "../components/createEvent";
+import CreateEvent from "../components/createEvent/createEvent";
 import AttendeesList from "../components/attendeesList";
-import EditEvent from "../components/editEvent";
-import AdminQRScanner from "../components/adminQRScanner";
+import EditEvent from "../components/editEvent/editEvent";
+import AdminQRScanner from "../components/qrcodeScanner/adminQRScanner";
 import DashboardHome from "./home";
 // import AssignWaiters from "../components/AssignWaiters";
 

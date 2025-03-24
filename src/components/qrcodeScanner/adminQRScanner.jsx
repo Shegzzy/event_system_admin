@@ -1,5 +1,6 @@
+import "./qrcode.css";
 import React, { useState } from "react";
-import { db } from "../firebaseConfig";
+import { db } from "../../firebaseConfig";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
@@ -42,7 +43,7 @@ const AdminQRScanner = () => {
   };
 
   return (
-    <div>
+    <div className="scanner">
       <h2>Admin QR Code Scanner</h2>
 
       <BarcodeScannerComponent

@@ -4,7 +4,7 @@ import { Visibility } from "@mui/icons-material";
 export default function WidgetSm() {
   return (
     <div className="widgetSm">
-      <span className="widgetSmTitle">New Join Members</span>
+      <span className="widgetSmTitle">Past Events</span>
       <ul className="widgetSmList">
         <li className="widgetSmListItem">
           <img

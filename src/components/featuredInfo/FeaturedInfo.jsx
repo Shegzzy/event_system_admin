@@ -1,51 +1,53 @@
 import "./featuredInfo.css";
-import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
+import React, { useEffect, useState } from "react";
+import { db } from "../../firebaseConfig";
+import { collection, query, orderBy, limit, onSnapshot } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
 
 export default function FeaturedInfo() {
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const eventsRef = collection(db, "events");
+    const q = query(eventsRef, orderBy("date"), limit(4));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setUpcomingEvents(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    });
+    return () => unsubscribe();
+  }, []);
+
   return (
-    <div className="featured">
-      <div className="featuredItem">
-        <span className="featuredTitle">Revanue</span>
-        <div className="featuredMoneyContainer">
-          <span className="featuredMoney">$2,415</span>
-          <span className="featuredMoneyRate">
-            -11.4 <ArrowDownward  className="featuredIcon negative"/>
-          </span>
-        </div>
-        <span className="featuredSub">Compared to last month</span>
+    <div className="featuredContainer">
+      <div className="featuredHeader">
+        <h2 className="featuredTitle">Upcoming Events</h2>
+        <button className="viewAllBtn" onClick={() => navigate("/events")}>View All</button>
       </div>
 
-      <div className="featuredItem">
-        <span className="featuredTitle">Sales</span>
-        <div className="featuredMoneyContainer">
-          <span className="featuredMoney">$4,415</span>
-          <span className="featuredMoneyRate">
-            -1.4 <ArrowDownward className="featuredIcon negative"/>
-          </span>
-        </div>
-        <span className="featuredSub">Compared to last month</span>
-      </div>
+      <div className="featured">
+        {upcomingEvents.map((event) => {
+          return (
+            <div key={event.id} className="featuredItem">
+              {/* Date Box */}
+              <div className="eventDateBox">
+                <span className="eventDay">{format(new Date(event.date), "dd")}</span>
+                <span className="eventMonth">{format(new Date(event.date), "MMM")}</span>
+                <span className="eventTime">{event.time}</span>
+              </div>
 
-      <div className="featuredItem">
-        <span className="featuredTitle">Cost</span>
-        <div className="featuredMoneyContainer">
-          <span className="featuredMoney">$2,225</span>
-          <span className="featuredMoneyRate">
-            +2.4 <ArrowUpward className="featuredIcon"/>
-          </span>
-        </div>
-        <span className="featuredSub">Compared to last month</span>
-      </div>
-
-      <div className="featuredItem">
-        <span className="featuredTitle">Cost</span>
-        <div className="featuredMoneyContainer">
-          <span className="featuredMoney">$2,225</span>
-          <span className="featuredMoneyRate">
-            +2.4 <ArrowUpward className="featuredIcon"/>
-          </span>
-        </div>
-        <span className="featuredSub">Compared to last month</span>
+              {/* Event Details */}
+              <div className="eventDetails">
+                <span className="eventTitle">{event.title}</span>
+                <span className="eventLocation">{event.location}</span>
+                <div className="view-event">
+                  <span className="eventSeats">Seats Left: {event.availableSeats}</span>
+                  <span className="eventView" onClick={() => navigate(`/event/${event.id}`)}>View</span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
