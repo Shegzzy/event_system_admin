@@ -1,6 +1,6 @@
 import "./qrcode.css";
 import React, { useState } from "react";
-import WebcamCapture from "../../components/webcamCapture/webcamCapture";
+import WebcamCapture from "../webcam/webcamCapture";
 import jsQR from 'jsqr';
 
 
