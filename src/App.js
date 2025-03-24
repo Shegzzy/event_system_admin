@@ -13,7 +13,6 @@ import EditEvent from './components/editEvent/editEvent';
 import CreateEvent from './components/createEvent/createEvent';
 import AttendeeList from './pages/productList/AttendeeList';
 import AdminQRScanner from './components/qrcodeScanner/adminQRScanner';
-import QRScanner from './components/qrcodeScanner/qrScanner';
 
 
 function App() {
@@ -35,7 +34,7 @@ function App() {
             }}/>} />
           <Route exact path="/createEvent" element = {<CreateEvent />} />
           <Route exact path="/attendees" element = {<AttendeeList />} />
-          <Route exact path="/scan" element = {<QRScanner />} />
+          <Route exact path="/scan" element = {<AdminQRScanner />} />
         </Routes>
       </div>
     </Router>

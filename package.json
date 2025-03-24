@@ -1,5 +1,6 @@
 {
   "name": "event-admin-dashboard",
+  "homepage": "https://event-management-4a6c4.web.app/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

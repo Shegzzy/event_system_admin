@@ -28,7 +28,7 @@ const handleScan = (imageSrc) => {
 }
 
 return (
-    <div>
+    <div className="scanner">
         <WebcamCapture onScan={handleScan} />
     </div>
 );
