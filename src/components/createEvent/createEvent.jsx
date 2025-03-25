@@ -101,7 +101,7 @@ const CreateEvent = () => {
         <input type="number" placeholder="Total Capacity" value={capacity} onChange={(e) => setCapacity(e.target.value)} required />
 
         {/* Meal Options */}
-        <div className="meal-options">
+        {/* <div className="meal-options">
           <h4>Meal Options</h4>
           <input type="text" placeholder="Add meal (press Enter)" onKeyDown={handleAddMealOption} />
           <ul>
@@ -112,10 +112,10 @@ const CreateEvent = () => {
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
 
         {/* Tables */}
-        <div className="table-section">
+        {/* <div className="table-section">
           <h4>Tables</h4>
           <div className="table-input">
             <input type="number" placeholder="Table Capacity" value={tableCapacity} onChange={(e) => setTableCapacity(e.target.value)} />
@@ -129,7 +129,7 @@ const CreateEvent = () => {
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
 
         {/* Submit Button */}
         <button type="submit" disabled={loading} className="submit-btn">

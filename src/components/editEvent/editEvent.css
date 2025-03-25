@@ -2,4 +2,57 @@
     flex: 6;
     padding-left: 20px;
     padding-right: 20px;
+    background: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  input, textarea {
+    width: 400px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    align-self: center;
+  }
+  
+  textarea {
+    resize: none;
+    height: 120px;
+  }
+
+  .submit-btn {
+    background: #28a745;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 200px;
+    justify-content: center;
+    align-self: center;
+  }
+  
+  .submit-btn:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+  }
+  
+  /* Loader Animation */
+  .loader {
+    width: 20px;
+    height: 20px;
+    border: 3px solid white;
+    border-top: 3px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }

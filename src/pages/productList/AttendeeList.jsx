@@ -65,7 +65,6 @@ export default function AttendeeList() {
         disableSelectionOnClick
         columns={columns}
         pageSize={8}
-        checkboxSelection
       />
     </div>
   );

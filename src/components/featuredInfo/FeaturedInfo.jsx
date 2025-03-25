@@ -41,7 +41,7 @@ export default function FeaturedInfo() {
                 <span className="eventTitle">{event.title}</span>
                 <span className="eventLocation">{event.location}</span>
                 <div className="view-event">
-                  <span className="eventSeats">Seats Left: {event.availableSeats}</span>
+                  <span className="eventSeats">Capacity: {event.capacity}</span>
                   <span className="eventView" onClick={() => navigate(`/event/${event.id}`)}>View</span>
                 </div>
               </div>
