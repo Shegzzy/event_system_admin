@@ -55,7 +55,7 @@ const CreateEvent = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(URL.createObjectURL(file)); // Create a preview URL for the selected image
+      setImage(URL.createObjectURL(file));
     }
   };
 
@@ -162,12 +162,12 @@ const CreateEvent = () => {
         <input type="number" placeholder="Audience Capacity" value={capacity} onChange={(e) => setCapacity(e.target.value)} required />
 
         {/* Image Upload */}
-        <input
+        {/* <input
           type="file"
           accept="image/*"
           onChange={handleImageChange}
           required
-        />
+        /> */}
         
         {/* Image Preview */}
         {image && (

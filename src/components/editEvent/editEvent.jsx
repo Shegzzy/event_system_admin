@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { db, storage } from "../../firebaseConfig";
 import { doc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { useParams } from "react-router-dom";
 
 const EditEvent = ({ event, onCancel, onUpdate }) => {
-  const [id] = useState(event.docId);
+  const { eventId } = useParams();
   const [title, setTitle] = useState(event.title);
   const [speaker, setSpeaker] = useState(event.speaker);
   const [description, setDescription] = useState(event.description);
@@ -30,7 +31,7 @@ const EditEvent = ({ event, onCancel, onUpdate }) => {
 
   // Upload image to Firebase Storage and return the URL
   const uploadImage = async (imageFile) => {
-    const storageRef = ref(storage, `event_images/${id}`);
+    const storageRef = ref(storage, `event_images/${eventId}`);
     const uploadTask = uploadBytesResumable(storageRef, imageFile);
 
     return new Promise((resolve, reject) => {
@@ -52,11 +53,12 @@ const EditEvent = ({ event, onCancel, onUpdate }) => {
     let imageUrl = previewImage;
 
     try {
+      console.log(eventId);
       if (image) {
         imageUrl = await uploadImage(image);
       }
 
-      const eventRef = doc(db, "events", id);
+      const eventRef = doc(db, "events", eventId);
       await updateDoc(eventRef, {
         title,
         speaker,
@@ -67,12 +69,11 @@ const EditEvent = ({ event, onCancel, onUpdate }) => {
         endTime,
         location,
         capacity: parseInt(capacity),
-        image: imageUrl, // Update Firestore with new image
+        image: imageUrl,
       });
 
       onUpdate({ ...event, title, speaker, description, date, endDate, time, endTime, location, capacity: parseInt(capacity), image: imageUrl });
       alert("Event updated successfully!");
-      onCancel();
     } catch (error) {
       console.error("Error updating event:", error);
       alert("Failed to update event.");
@@ -95,7 +96,7 @@ const EditEvent = ({ event, onCancel, onUpdate }) => {
       <input type="number" placeholder="Audience Capacity" value={capacity} onChange={(e) => setCapacity(e.target.value)} required />
 
       {/* Image Upload Section */}
-      <input type="file" accept="image/*" onChange={handleImageChange} />
+      {/* <input type="file" accept="image/*" onChange={handleImageChange} /> */}
       
       {/* Show Image Preview */}
       {previewImage && (

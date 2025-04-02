@@ -94,7 +94,7 @@ const EventList = ({ onEdit }) => {
       renderCell: (params) => {
         return (
           <div className="action_div">
-            <Link to={`/events/${params.row.id}`} onClick={() => onEdit(params.row)}>
+            <Link to={`/events/${params.row.docId}`} onClick={() => onEdit(params.row)}>
               <button className="eventListEdit">Edit</button>
             </Link>
     
