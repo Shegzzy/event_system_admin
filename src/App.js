@@ -13,6 +13,7 @@ import EditEvent from './components/editEvent/editEvent';
 import CreateEvent from './components/createEvent/createEvent';
 import AttendeeList from './pages/productList/AttendeeList';
 import AdminQRScanner from './components/qrcodeScanner/adminQRScanner';
+import EventDetailsPage from './components/eventDetails/eventDetails';
 
 
 function App() {
@@ -30,8 +31,8 @@ function App() {
             event={editingEvent}
             onCancel={(event) => setEditingEvent(event)}
             onUpdate={(updatedEvent) => {
-              setEditingEvent(updatedEvent);
-            }}/>} />
+              setEditingEvent(updatedEvent);}}/>} />
+          <Route exact path="/events/details/:eventId" element = {<EventDetailsPage />} />
           <Route exact path="/createEvent" element = {<CreateEvent />} />
           <Route exact path="/attendees" element = {<AttendeeList />} />
           <Route exact path="/scan" element = {<AdminQRScanner />} />

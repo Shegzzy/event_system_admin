@@ -10,8 +10,9 @@ const AdminQRScanner = () => {
   const [error, setError] = useState("");
 
   const handleScan = async (data) => {
-    if (data) {
+    if (data && data !== scanResult) {
       setScanResult(data);
+      setError(""); // Clear previous errors
       await fetchGuestDetails(data);
     }
   };
@@ -22,49 +23,62 @@ const AdminQRScanner = () => {
   };
 
   const fetchGuestDetails = async (guestId) => {
-    const guestRef = doc(db, "guests", guestId);
-    const guestSnap = await getDoc(guestRef);
+    try {
+      const guestRef = doc(db, "attendees", guestId); // Ensure you fetch from the correct collection
+      const guestSnap = await getDoc(guestRef);
 
-    if (guestSnap.exists()) {
-      setGuest({ id: guestId, ...guestSnap.data() });
-    } else {
-      setError("Invalid QR Code!");
+      if (guestSnap.exists()) {
+        setGuest({ id: guestId, ...guestSnap.data() });
+      } else {
+        setError("Invalid QR Code!");
+        setGuest(null);
+      }
+    } catch (err) {
+      setError("Error fetching guest details. Try again.");
     }
   };
 
   const handleCheckIn = async () => {
-    if (!guest) return;
+    if (!guest || guest.status === "checked in") return;
 
-    const guestRef = doc(db, "guests", guest.id);
-    await updateDoc(guestRef, { checkedIn: true });
+    try {
+      const guestRef = doc(db, "attendees", guest.id);
+      await updateDoc(guestRef, { status: "checked in" });
 
-    alert("Guest checked in successfully!");
-    setGuest({ ...guest, checkedIn: true });
+      alert(`${guest.name} has been checked in!`);
+      setGuest({ ...guest, status: "checked in" });
+    } catch (err) {
+      setError("Error updating check-in status. Try again.");
+    }
   };
 
   return (
     <div className="scanner">
       <h2>Admin QR Code Scanner</h2>
 
+      <div className="cam-scanner">
       <BarcodeScannerComponent
         width={500}
         height={500}
-        onUpdate={(error, result) => {
-          if (result) handleScan(result?.text);
-          if (error) handleError(error);
+        onUpdate={(err, result) => {
+          if (result) handleScan(result.text);
+          if (err) handleError(err);
         }}
       />
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
 
       {guest && (
-        <div>
+        <div className="guest-info">
           <p><strong>Name:</strong> {guest.name}</p>
           <p><strong>Email:</strong> {guest.email}</p>
-          <p><strong>Status:</strong> {guest.checkedIn ? "Already Checked In" : "Not Checked In"}</p>
-          {!guest.checkedIn && <button onClick={handleCheckIn}>Check In</button>}
+          <p><strong>Status:</strong> {guest.status === "checked in" ? "Already Checked In" : "Not Checked In"}</p>
+          {guest.status !== "checked in" && (
+            <button onClick={handleCheckIn}>Check In</button>
+          )}
         </div>
       )}
+      </div>
     </div>
   );
 };

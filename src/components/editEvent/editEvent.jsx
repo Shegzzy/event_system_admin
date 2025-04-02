@@ -1,34 +1,78 @@
 import "./editEvent.css";
 import React, { useState } from "react";
-import { db } from "../../firebaseConfig";
+import { db, storage } from "../../firebaseConfig";
 import { doc, updateDoc } from "firebase/firestore";
-import { Form, InputGroup, Button } from "react-bootstrap";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 const EditEvent = ({ event, onCancel, onUpdate }) => {
   const [id] = useState(event.docId);
   const [title, setTitle] = useState(event.title);
+  const [speaker, setSpeaker] = useState(event.speaker);
   const [description, setDescription] = useState(event.description);
-  const [date, setDate] = useState(event.date);
-  const [time, setTime] = useState(event.time);
+  const [date, setStartDate] = useState(event.date);
+  const [endDate, setEndDate] = useState(event.endDate);
+  const [time, setStartTime] = useState(event.time);
+  const [endTime, setEndTime] = useState(event.endTime);
   const [location, setLocation] = useState(event.location);
   const [capacity, setCapacity] = useState(event.capacity);
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(event.image); // Show existing image
 
+  // Handle image selection
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setPreviewImage(URL.createObjectURL(file)); // Preview selected image
+    }
+  };
+
+  // Upload image to Firebase Storage and return the URL
+  const uploadImage = async (imageFile) => {
+    const storageRef = ref(storage, `event_images/${id}`);
+    const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        null,
+        (error) => reject(error),
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          resolve(downloadURL);
+        }
+      );
+    });
+  };
+
+  // Handle save
   const handleSave = async () => {
     setLoading(true);
+    let imageUrl = previewImage;
+
     try {
+      if (image) {
+        imageUrl = await uploadImage(image);
+      }
+
       const eventRef = doc(db, "events", id);
       await updateDoc(eventRef, {
         title,
+        speaker,
         description,
         date,
+        endDate,
         time,
+        endTime,
         location,
         capacity: parseInt(capacity),
+        image: imageUrl, // Update Firestore with new image
       });
-      onUpdate({ ...event, title, description, date, time, location, capacity: parseInt(capacity) });
+
+      onUpdate({ ...event, title, speaker, description, date, endDate, time, endTime, location, capacity: parseInt(capacity), image: imageUrl });
       alert("Event updated successfully!");
-      onCancel({event});
+      onCancel();
     } catch (error) {
       console.error("Error updating event:", error);
       alert("Failed to update event.");
@@ -40,14 +84,29 @@ const EditEvent = ({ event, onCancel, onUpdate }) => {
   return (
     <div className="editList">
       <h2>Edit Event</h2>
-      <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
-      <textarea value={description} onChange={(e) => setDescription(e.target.value)} required></textarea>
-      <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
-      <input type="time" value={time} onChange={(e) => setTime(e.target.value)} required />
-      <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
-      <input type="number" value={capacity} onChange={(e) => setCapacity(e.target.value)} required />
-      <button onClick={handleSave} disabled={loading} className="submit-btn">{loading ? "Saving..." : "Save Changes"}</button>
-      {/* <button onClick={onCancel}>Cancel</button> */}
+      <input type="text" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+      <input type="text" placeholder="Speaker" value={speaker} onChange={(e) => setSpeaker(e.target.value)} required />
+      <textarea value={description} placeholder="Description" onChange={(e) => setDescription(e.target.value)} required></textarea>
+      <input type="date" placeholder="Start Date" value={date} onChange={(e) => setStartDate(e.target.value)} required />
+      <input type="date" placeholder="End Date" value={endDate} onChange={(e) => setEndDate(e.target.value)}  />
+      <input type="time" placeholder="Start Time" value={time} onChange={(e) => setStartTime(e.target.value)} required />
+      <input type="time" placeholder="End Time" value={endTime} onChange={(e) => setEndTime(e.target.value)}  />
+      <input type="text" placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)} required />
+      <input type="number" placeholder="Audience Capacity" value={capacity} onChange={(e) => setCapacity(e.target.value)} required />
+
+      {/* Image Upload Section */}
+      <input type="file" accept="image/*" onChange={handleImageChange} />
+      
+      {/* Show Image Preview */}
+      {previewImage && (
+        <div className="image-preview">
+          <img src={previewImage} alt="Event Preview" className="image-preview-img" />
+        </div>
+      )}
+
+      <button onClick={handleSave} disabled={loading} className="submit-btn">
+        {loading ? "Saving..." : "Save Changes"}
+      </button>
     </div>
   );
 };

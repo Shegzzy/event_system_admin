@@ -8,6 +8,11 @@ import {
   AdfScannerRounded,
   Scanner,
   QrCodeScanner,
+  Home,
+  Event,
+  EventSharp,
+  EventAvailable,
+  HomeRounded,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
@@ -24,7 +29,7 @@ export default function Sidebar() {
           <ul className="sidebarList">
             <Link to="/" className="link" onClick={() => setActiveTab("/")}>
               <li className={`sidebarListItem ${activeTab === "/" ? "active" : ""}`}>
-                <LineStyle className="sidebarIcon" />
+                <HomeRounded className="sidebarIcon" />
                 Home
               </li>
             </Link>
@@ -36,7 +41,7 @@ export default function Sidebar() {
 
             <Link to="/events" className="link" onClick={() => setActiveTab("events")}>
               <li className={`sidebarListItem ${activeTab === "events" ? "active" : ""}`}>
-                <Storefront className="sidebarIcon" />
+                <EventAvailable className="sidebarIcon" />
                 Events
               </li>
             </Link>

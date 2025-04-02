@@ -20,7 +20,7 @@ const DashboardHome = () => {
 
   // Fetch Recent Signups
   useEffect(() => {
-    const signupsRef = collection(db, "signups");
+    const signupsRef = collection(db, "atendees");
     const q = query(signupsRef, orderBy("timestamp", "desc"), limit(5));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setRecentSignups(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
@@ -55,19 +55,23 @@ const DashboardHome = () => {
         <table className="w-full border-collapse border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
-              <th className="p-2 border">User Name</th>
+              <th className="p-2 border">Name</th>
               <th className="p-2 border">Event Name</th>
               <th className="p-2 border">Event Date</th>
+              <th className="p-2 border">Date Signed Up</th>
+              <th className="p-2 border">Status</th>
               <th className="p-2 border">Location</th>
             </tr>
           </thead>
           {recentSignups.length > 0 ? (<tbody>
             {recentSignups.map((signup) => (
               <tr key={signup.id} className="text-center border">
-                <td className="p-2 border">{signup.userName}</td>
+                <td className="p-2 border">{signup.name}</td>
                 <td className="p-2 border">{signup.eventName}</td>
                 <td className="p-2 border">{signup.eventDate}</td>
-                <td className="p-2 border">{signup.eventLocation}</td>
+                <td className="p-2 border">{signup.timeStamp}</td>
+                <td className="p-2 border">{signup.status}</td>
+                <td className="p-2 border">{signup.location}</td>
               </tr>
             ))}
           </tbody>) : (

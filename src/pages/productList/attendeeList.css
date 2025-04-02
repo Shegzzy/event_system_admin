@@ -1,5 +1,17 @@
 .productList{
-    flex: 4;
+    flex: 6;
+    padding: 15px;
+    position: relative;
+}
+
+.loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    font-size: 18px;
+    font-weight: bold;
+    color: #555;
 }
 
 .productListItem{

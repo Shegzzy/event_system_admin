@@ -1,0 +1,141 @@
+.event-details-container {
+    flex: 6;
+    padding: 20px;
+  }
+  
+  .event-info {
+    margin-bottom: 20px;
+  }
+  
+  .event-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .event-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  
+  .event-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .event-item {
+    background: #f9f9f9;
+    padding: 12px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .label {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .value {
+    font-size: 16px;
+    color: #333;
+    margin-top: 5px;
+  }
+  
+  .event-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Toggle Switch */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 34px;
+    transition: 0.4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #000;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(18px);
+  }
+  
+  /* RESPONSIVENESS */
+  @media screen and (max-width: 768px) {
+    .event-details-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .event-details-container {
+      padding: 15px;
+    }
+    
+    .event-title {
+      font-size: 18px;
+    }
+    
+    .label {
+      font-size: 13px;
+    }
+    
+    .value {
+      font-size: 14px;
+    }
+  }
+  
+  
+  .attendees-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .attendees-table th, .attendees-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .attendees-table th {
+    background-color: #f4f4f4;
+  }
+  

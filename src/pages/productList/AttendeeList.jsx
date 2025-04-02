@@ -1,71 +1,110 @@
 import "./attendeeList.css";
 import { DataGrid } from "@mui/x-data-grid";
-import { DeleteOutline } from "@mui/icons-material";
-import { productRows } from "../../dummyData";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { collection, getDocs} from "firebase/firestore";
+import { db } from "../../firebaseConfig";
+
 
 export default function AttendeeList() {
-  const [data, setData] = useState(productRows);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleDelete = (id) => {
-    setData(data.filter((item) => item.id !== id));
-  };
+  useEffect(() => {
+    const fetchAttendees = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "attendees"));
+        const attendeeData = querySnapshot.docs.map((doc) => ({
+          docId: doc.id,
+          ...doc.data(),
+        }));
+
+        setData(attendeeData);
+      } catch (error) {
+        console.error("Error fetching attendees:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAttendees();
+  }, []);
 
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
+    // { field: "userId", headerName: "ID", width: 90 },
     {
-      field: "product",
-      headerName: "Product",
+      field: "name",
+      headerName: "Name",
       width: 200,
+    },
+
+    { field: "email", headerName: "Email", width: 200 },
+
+    { field: "eventName", headerName: "Event Name", width: 200 },
+
+    { field: "location", headerName: "Location", width: 200 },
+
+    {
+      field: "eventDate",
+      headerName: "Event Date",
+      width: 120,
       renderCell: (params) => {
         return (
-          <div className="productListItem">
-            <img className="productListImg" src={params.row.img} alt="" />
-            {params.row.name}
-          </div>
+          <>
+            <div>
+                {params.value
+              ? new Date(params.value).toLocaleString("en-US", {
+              month: "short",
+              day: "2-digit",
+              year: "numeric",
+            })
+              : ""}
+            </div>
+          </>
         );
       },
     },
-    { field: "stock", headerName: "Stock", width: 200 },
+
+    {
+      field: "timeStamp",
+      headerName: "Date Signed Up",
+      width: 160,
+      renderCell: (params) => {
+        return (
+          <>
+            <div>
+                {params.value
+              ? new Date(params.value.seconds * 1000).toLocaleString("en-US", {
+              month: "short",
+              day: "2-digit",
+              year: "numeric",
+            })
+              : ""}
+            </div>
+          </>
+        );
+      },
+    },
+
     {
       field: "status",
       headerName: "Status",
       width: 120,
     },
-    {
-      field: "price",
-      headerName: "Price",
-      width: 160,
-    },
-    {
-      field: "action",
-      headerName: "Action",
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <>
-            <Link to={"/product/" + params.row.id}>
-              <button className="productListEdit">Edit</button>
-            </Link>
-            <DeleteOutline
-              className="productListDelete"
-              onClick={() => handleDelete(params.row.id)}
-            />
-          </>
-        );
-      },
-    },
   ];
 
   return (
     <div className="productList">
-      <DataGrid
-        rows={data}
-        disableSelectionOnClick
-        columns={columns}
-        pageSize={8}
-      />
+      {loading ? (
+        <p className="loadingContainer">Loading attendees...</p>
+      ) : (
+        <DataGrid
+          getRowId={(row) => row.docId} 
+          rows={data}
+          disableSelectionOnClick
+          columns={columns}
+          pageSize={8}
+        />
+      )}
     </div>
   );
 }

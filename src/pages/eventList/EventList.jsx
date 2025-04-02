@@ -25,7 +25,6 @@ const EventList = ({ onEdit }) => {
           ...doc.data(),
         }));
 
-        console.log(eventData.id);
         setEvents(eventData);
       } catch (error) {
         console.error("Error fetching events:", error);
@@ -60,12 +59,28 @@ const EventList = ({ onEdit }) => {
       headerName: "Title",
       width: 200,
     },
+    { field: "speaker", headerName: "Speaker", width: 200 },
     { field: "location", headerName: "Location", width: 200 },
     { field: "capacity", headerName: "Capacity", width: 200 },
     {
       field: "date",
       headerName: "Date",
       width: 120,
+      renderCell: (params) => {
+        return (
+          <>
+            <div>
+                {params.value
+              ? new Date(params.value).toLocaleString("en-US", {
+              month: "short",
+              day: "2-digit",
+              year: "numeric",
+            })
+              : ""}
+            </div>
+          </>
+        );
+      },
     },
     {
       field: "time",
@@ -83,7 +98,7 @@ const EventList = ({ onEdit }) => {
               <button className="eventListEdit">Edit</button>
             </Link>
     
-            <Link to={`/user/${params.row.id}`}>
+            <Link to={`/events/details/${params.row.docId}`}>
               <button className="eventListEdit">View</button>
             </Link>
     
@@ -101,13 +116,16 @@ const EventList = ({ onEdit }) => {
         <button className="viewAllBtn" onClick={() => navigate("/createEvent")}>Create Event</button>
       </div>
 
-      <DataGrid
-        rows={events}
-        disableSelectionOnClick
-        columns={columns}
-        pageSize={8}
-        checkboxSelection
-      />
+      {loading ? (
+        <p className="loadingContainer">Loading events...</p>
+      ) : (
+        <DataGrid
+          rows={events}
+          disableSelectionOnClick
+          columns={columns}
+          pageSize={8}
+        />
+      )}
     </div>
   );
 }

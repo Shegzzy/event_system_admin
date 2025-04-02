@@ -14,8 +14,8 @@ export default function WidgetLg() {
 
     // Fetch Recent Signups
     useEffect(() => {
-      const signupsRef = collection(db, "signups");
-      const q = query(signupsRef, orderBy("timestamp", "desc"), limit(5));
+      const signupsRef = collection(db, "attendees");
+      const q = query(signupsRef, orderBy("timeStamp", "desc"), limit(5));
       const unsubscribe = onSnapshot(q, (snapshot) => {
         setRecentSignups(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
       });
@@ -28,21 +28,36 @@ export default function WidgetLg() {
     <div className="widgetLg">
       <h3 className="widgetLgTitle">Attendees Signing Up</h3>
       <table className="widgetLgTable">
-        <tr className="widgetLgTr">
-          <th className="widgetLgTh">Name</th>
-          <th className="widgetLgTh">Event</th>
-          <th className="widgetLgTh">Date</th>
-          {/* <th className="widgetLgTh">Status</th> */}
-        </tr>
+            <thead>
+              <tr className="widgetLgTr">
+                <th className="widgetLgTh"></th>
+                <th className="widgetLgTh">Name</th>
+                <th className="widgetLgTh">Event Name</th>
+                <th className="widgetLgTh">Event Date</th>
+                <th className="widgetLgTh">Location</th>
+                <th className="widgetLgTh">Date Signed Up</th>
+                <th className="widgetLgTh">Status</th>
+              </tr>
+            </thead>
         
         {recentSignups.length > 0 ? (<tbody>
-          {recentSignups.map((signups) => (
+          {recentSignups.map((signups, index) => (
             <tr className="widgetLgTr" key={signups.id}>
+              <td className="widgetLgName">{index + 1}</td>
+
               <td className="widgetLgUser">
                 <span className="widgetLgName">{signups.name}</span>
               </td>
-              <td className="widgetLgDate">Wedding</td>
-              <td className="widgetLgAmount">2 Jun 2021</td>
+              <td className="widgetLgName">{signups.eventName}</td>
+              <td className="widgetLgName">{signups.eventDate}</td>
+              <td className="widgetLgName">{signups.location}</td>
+              <td className="widgetLgName">{ new Date(signups.timeStamp.seconds * 1000).toLocaleString("en-US", {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                })}
+              </td>
+              <td className="widgetLgName">{signups.status}</td>
             </tr>
           ))}
         </tbody>) : (
