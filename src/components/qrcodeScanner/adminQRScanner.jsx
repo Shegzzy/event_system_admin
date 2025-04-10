@@ -2,17 +2,18 @@ import "./qrcode.css";
 import React, { useState } from "react";
 import { db } from "../../firebaseConfig";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
 const AdminQRScanner = () => {
   const [scanResult, setScanResult] = useState("");
   const [guest, setGuest] = useState(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleScan = async (data) => {
     if (data && data !== scanResult) {
       setScanResult(data);
-      setError(""); // Clear previous errors
+      setError("");
       await fetchGuestDetails(data);
     }
   };
@@ -22,19 +23,33 @@ const AdminQRScanner = () => {
     setError("QR Scan Error. Please try again.");
   };
 
-  const fetchGuestDetails = async (guestId) => {
+  const fetchGuestDetails = async (qrCode) => {
+    setLoading(true); // Show loading indicator
     try {
-      const guestRef = doc(db, "attendees", guestId); // Ensure you fetch from the correct collection
-      const guestSnap = await getDoc(guestRef);
+      const guestRef = collection(db, "attendees");
+      const guestQuery = query(guestRef, where("eventQr", "==", qrCode));
+      const guestSnap = await getDocs(guestQuery);
 
-      if (guestSnap.exists()) {
-        setGuest({ id: guestId, ...guestSnap.data() });
+      if (!guestSnap.empty) {
+        const guestDoc = guestSnap.docs[0];
+        const guestData = guestDoc.data();
+
+        // Check if the guest has already checked in
+        if (guestData.status === "checked in") {
+          setError("This guest has already been checked in!");
+          setGuest(null);
+        } else {
+          setGuest(guestData);
+        }
       } else {
         setError("Invalid QR Code!");
         setGuest(null);
       }
     } catch (err) {
       setError("Error fetching guest details. Try again.");
+      console.error(err);
+    } finally {
+      setLoading(false); // Hide loading indicator
     }
   };
 
@@ -49,6 +64,7 @@ const AdminQRScanner = () => {
       setGuest({ ...guest, status: "checked in" });
     } catch (err) {
       setError("Error updating check-in status. Try again.");
+      console.error(err);
     }
   };
 
@@ -57,27 +73,29 @@ const AdminQRScanner = () => {
       <h2>Admin QR Code Scanner</h2>
 
       <div className="cam-scanner">
-      <BarcodeScannerComponent
-        width={500}
-        height={500}
-        onUpdate={(err, result) => {
-          if (result) handleScan(result.text);
-          if (err) handleError(err);
-        }}
-      />
+        <BarcodeScannerComponent
+          width={500}
+          height={500}
+          onUpdate={(err, result) => {
+            if (result) handleScan(result.text);
+            if (err) handleError(err);
+          }}
+        />
 
-      {error && <p className="error">{error}</p>}
+        {loading && <p>Loading...</p>} {/* Show loading indicator */}
 
-      {guest && (
-        <div className="guest-info">
-          <p><strong>Name:</strong> {guest.name}</p>
-          <p><strong>Email:</strong> {guest.email}</p>
-          <p><strong>Status:</strong> {guest.status === "checked in" ? "Already Checked In" : "Not Checked In"}</p>
-          {guest.status !== "checked in" && (
-            <button onClick={handleCheckIn}>Check In</button>
-          )}
-        </div>
-      )}
+        {error && <p className="error">{error}</p>}
+
+        {guest && (
+          <div className="guest-info">
+            <p><strong>Name:</strong> {guest.name}</p>
+            <p><strong>Email:</strong> {guest.email}</p>
+            <p><strong>Status:</strong> {guest.status === "checked in" ? "Already Checked In" : "Not Checked In"}</p>
+            {guest.status !== "checked in" && (
+              <button onClick={handleCheckIn}>Check In</button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
