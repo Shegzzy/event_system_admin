@@ -82,6 +82,7 @@ const AdminQRScanner = () => {
 
         {guest && (
           <div className="guest-info">
+            <p><strong>Event:</strong> {guest.eventName}</p>
             <p><strong>Name:</strong> {guest.name}</p>
             <p><strong>Email:</strong> {guest.email}</p>
             <p><strong>Status:</strong> {guest.status === "checked in" ? "Already Checked In" : "Not Checked In"}</p>
