@@ -4,10 +4,98 @@
     padding-right: 15px;
     position: relative;
 }
-
-.cam-scanner {
+  
+  /* Camera Scanner Container */
+  .cam-scanner {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 60vh;
-}
+    justify-content: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .cam-scanner p {
+    color: #555;
+    font-size: 1rem;
+    margin: 10px 0;
+  }
+  
+  /* QR Scanner Container */
+  .scanner .react-scanner {
+    margin-top: 20px;
+  }
+  
+  /* Loading and Error Messages */
+  .error {
+    color: #d9534f;
+    font-size: 1.1rem;
+    margin: 10px 0;
+  }
+  
+  .error p {
+    text-align: center;
+  }
+  
+  /* Guest Info Section */
+  .guest-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #eef2f7;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .guest-info p {
+    color: #333;
+    font-size: 1rem;
+    margin: 5px 0;
+    text-align: center;
+  }
+  
+  .guest-info strong {
+    font-weight: bold;
+  }
+  
+  /* Button Styles */
+  button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  button:focus {
+    outline: none;
+  }
+  
+  /* Loading Indicator */
+  .loading {
+    font-size: 1.2rem;
+    color: #0069d9;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+  }
+  

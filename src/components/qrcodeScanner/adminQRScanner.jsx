@@ -2,7 +2,7 @@ import "./qrcode.css";
 import React, { useState } from "react";
 import { db } from "../../firebaseConfig";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
-import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
 const AdminQRScanner = () => {
   const [scanResult, setScanResult] = useState("");
@@ -82,7 +82,7 @@ const AdminQRScanner = () => {
           }}
         />
 
-        {loading && <p>Loading...</p>} {/* Show loading indicator */}
+        {loading && <p className="loading">Loading...</p>} {/* Show loading indicator */}
 
         {error && <p className="error">{error}</p>}
 
