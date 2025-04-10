@@ -34,13 +34,7 @@ const AdminQRScanner = () => {
         const guestDoc = guestSnap.docs[0];
         const guestData = guestDoc.data();
 
-        // Check if the guest has already checked in
-        if (guestData.status === "checked in") {
-          setError("This guest has already been checked in!");
-          setGuest(null);
-        } else {
-          setGuest(guestData);
-        }
+        setGuest(guestData);
       } else {
         setError("Invalid QR Code!");
         setGuest(null);
@@ -49,7 +43,7 @@ const AdminQRScanner = () => {
       setError("Error fetching guest details. Try again.");
       console.error(err);
     } finally {
-      setLoading(false); // Hide loading indicator
+      setLoading(false);
     }
   };
 
