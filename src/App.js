@@ -1,13 +1,13 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter as Router, Route, Routes, Switch} from "react-router-dom";
-import AdminDashboard from "./pages/adminDashboard";
-import EventsList from './components/eventsList';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// import AdminDashboard from "./pages/adminDashboard";
+// import EventsList from './components/eventsList';
 import Topbar from './components/topbar/Topbar';
 import Sidebar from './components/sidebar/Sidebar';
 import Home from './pages/home/Home';
 import EventList from './pages/eventList/EventList';
-import User from './pages/user/User';
+// import User from './pages/user/User';
 import React, { useState } from "react";
 import EditEvent from './components/editEvent/editEvent';
 import CreateEvent from './components/createEvent/createEvent';

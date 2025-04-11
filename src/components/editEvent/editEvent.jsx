@@ -1,7 +1,7 @@
 import "./editEvent.css";
 import React, { useState } from "react";
 import { db, storage } from "../../firebaseConfig";
-import { doc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useParams } from "react-router-dom";
 
@@ -51,13 +51,13 @@ const EditEvent = ({ event, onCancel, onUpdate }) => {
   const handleSave = async () => {
     setLoading(true);
     let imageUrl = previewImage;
-
+  
     try {
-      console.log(eventId);
       if (image) {
         imageUrl = await uploadImage(image);
       }
-
+  
+      // Update the main event
       const eventRef = doc(db, "events", eventId);
       await updateDoc(eventRef, {
         title,
@@ -71,16 +71,49 @@ const EditEvent = ({ event, onCancel, onUpdate }) => {
         capacity: parseInt(capacity),
         image: imageUrl,
       });
-
-      onUpdate({ ...event, title, speaker, description, date, endDate, time, endTime, location, capacity: parseInt(capacity), image: imageUrl });
-      alert("Event updated successfully!");
+  
+      // Update relevant fields in attendee docs
+      const attendeesQuery = query(collection(db, "attendees"), where("eventId", "==", eventId));
+      const attendeesSnapshot = await getDocs(attendeesQuery);
+  
+      const updateData = {
+        eventName: title,
+        eventSpeaker: speaker,
+        eventDate: date,
+        eventTime: time,
+        location,
+      };
+  
+      const batchUpdates = attendeesSnapshot.docs.map((attendeeDoc) => {
+        const attendeeRef = attendeeDoc.ref;
+        return updateDoc(attendeeRef, updateData);
+      });
+  
+      await Promise.all(batchUpdates);
+  
+      onUpdate({
+        ...event,
+        title,
+        speaker,
+        description,
+        date,
+        endDate,
+        time,
+        endTime,
+        location,
+        capacity: parseInt(capacity),
+        image: imageUrl,
+      });
+  
+      alert("Event and attendee records updated!");
     } catch (error) {
-      console.error("Error updating event:", error);
+      console.error("Error updating event or attendees:", error);
       alert("Failed to update event.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="editList">
