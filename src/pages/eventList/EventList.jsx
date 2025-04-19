@@ -1,7 +1,7 @@
 import "./eventList.css";
 import { DataGrid } from "@mui/x-data-grid";
 import { DeleteOutline } from "@mui/icons-material";
-import { userRows } from "../../dummyData";
+// import { userRows } from "../../dummyData";
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebaseConfig";
@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 const EventList = ({ onEdit }) => {
-  const [data, setData] = useState(userRows);
+  // const [data, setData] = useState(userRows);
   const navigate = useNavigate();
   
 
@@ -48,9 +48,9 @@ const EventList = ({ onEdit }) => {
     }
   };
 
-  const handleDelete = (id) => {
-    setData(data.filter((item) => item.id !== id));
-  };
+  // const handleDelete = (id) => {
+  //   setData(data.filter((item) => item.id !== id));
+  // };
   
   const columns = [
     // { field: "docId", headerName: "ID", width: 90 },

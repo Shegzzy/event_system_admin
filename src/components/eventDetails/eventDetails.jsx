@@ -1,14 +1,52 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebaseConfig";
-import { doc, getDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { doc, getDoc, collection, query, where, serverTimestamp, setDoc, onSnapshot } from "firebase/firestore";
 import "./eventDetails.css";
+import { QRCodeCanvas } from 'qrcode.react';
+// import { v4 as uuidv4 } from 'uuid';
+import emailjs from '@emailjs/browser';
+import ShortUniqueId from "short-unique-id";
+
 
 const EventDetailsPage = () => {
   const { eventId } = useParams();
   const [event, setEvent] = useState(null);
   const [attendees, setAttendees] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [checkingIn, setChekingIn] = useState(false);
+  const [sendingTicket, setSendingTicket] = useState(false);
+  const canvasRef = useRef(null);
+  const [qrCode, setqrCode] = useState('');
+  // const [imageData, setImageData] = useState(null);
+
+
+  const uid = new ShortUniqueId({ length: 10 });
+
+  const generateQrCode = async (email, id) => {
+
+    setSendingTicket(true);
+
+    try {
+      const uniqueId = uid.rnd();
+      setqrCode(uniqueId);
+    
+      setTimeout(async () => {
+        if (canvasRef.current) {
+          const imgData = canvasRef.current.toDataURL('image/png');
+
+          await sendEmail(email, imgData);
+          await updateUserTicket(uniqueId, imgData, id);
+        }
+      }, 100);
+    }catch (err) {
+      console.log(err);
+    } finally {
+      setSendingTicket(false);
+    }
+    
+  };
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,22 +65,86 @@ const EventDetailsPage = () => {
           collection(db, "attendees"),
           where("eventId", "==", eventId)
         );
-        const signupsSnap = await getDocs(signupsQuery);
-        const attendeesList = signupsSnap.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
 
-        setAttendees(attendeesList);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false); // Ensure loading is disabled only after both fetches are complete
-      }
+        const unsubscribe = onSnapshot(signupsQuery, (snapshot) => {
+          setAttendees(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+        });
+                
+      return unsubscribe;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+    const unsubscribePromise = fetchData();
+
+    return () => {
+      unsubscribePromise.then((unsubscribe) => {
+        if (typeof unsubscribe === "function") unsubscribe();
+      });
+    };
+  }, [eventId]);
+
+  const sendEmail = async (email, imgData) => {
+
+    const serviceId = process.env.REACT_APP_EMAIL_SERVICE_ID || '';
+    const templateId = process.env.REACT_APP_EMAIL_TEMPLATE_ID || '';
+    const publicKey = process.env.REACT_APP_EMAIL_PUBLIC_KEY;
+
+    console.log(imgData);
+
+    const emailTemplate = {
+      image_url: imgData,
+      name: event.title,
+      email: email,
+      speaker: event.speaker,
+      date: event.date,
+      time: event.time,
+      location: event.location,
     };
 
-    fetchData();
-  }, [eventId]);
+    try {
+      const response = await emailjs.send(serviceId, templateId, emailTemplate, publicKey);
+      if (response.status === 200) {
+        // showAlert({ type: 'success', text: 'Email sent successfully' });
+        alert(`Event ticket has been sent to ${email}`);
+        console.log('Email sent successfully');
+      }
+    } catch (error) {
+      // showAlert({ type: 'error', text: 'Failed to send email' });
+      alert('Error sending event ticket');
+      console.log('Email sending error:', error);
+    }
+  };
+
+  const updateUserTicket = async (qrCode, imgData, id) => {
+
+    const attendeeData = {
+      status: 'not checked in',
+      eventQr: qrCode,
+      qrImage: imgData,
+      timeStamp: serverTimestamp(),
+    };
+
+    await setDoc(doc(db, 'attendees', id), attendeeData, { merge: true });
+  };
+
+  const handleCheckIn = async (name, id) => {  
+    setChekingIn(true);
+    try {
+      const guestRef = doc(db, "attendees", id);
+
+      await setDoc(guestRef, { status: "checked in" }, { merge: true });
+
+      alert(`${name} has been checked in!`);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setChekingIn(false);
+    }
+  };
 
   return (
     <div className="event-details-container">
@@ -113,8 +215,10 @@ const EventDetailsPage = () => {
                   <th>#</th>
                   <th>Name</th>
                   <th>Email</th>
+                  <th>Code</th>
                   <th>Status</th>
                   <th>Date</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -123,18 +227,41 @@ const EventDetailsPage = () => {
                     <td>{index + 1}</td>
                     <td>{attendee.name}</td>
                     <td>{attendee.email}</td>
+                    <td>{attendee.eventQr}</td>
                     <td>{attendee.status}</td>
-                    <td>{new Date(attendee.timeStamp.seconds * 1000).toLocaleString("en-US", {
+                    <td>{attendee.timeStamp?.seconds ? new Date(attendee.timeStamp.seconds * 1000).toLocaleString("en-US", {
                         month: "short",
                         day: "2-digit",
                         year: "numeric",
-                        })}
+                        }) : '_'}
+                    </td>
+                    <td>
+                      {attendee.eventQr === '' && 
+                        (<button onClick={() => generateQrCode(attendee.email, attendee.id)} disabled={sendingTicket}>
+                          {sendingTicket ? <span className="loader"></span> : "Send Ticket"}
+                        </button>)}
+                      <span>      </span>
+                      {attendee.status === 'not checked in' && 
+                        (<button onClick={() => handleCheckIn(attendee.name, attendee.id)} disabled={checkingIn}>
+                           {checkingIn ? <span className="loader"></span> : "Check In"}
+                        </button>)}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           )}
+
+          <div className='container center'>
+            <QRCodeCanvas
+              value={qrCode}
+              size={150}
+              ref={canvasRef}
+              level='H'
+              bgColor='white'
+              style={{ display: 'none' }}
+            />
+          </div>
         </>
       ) : (
         <p>Event not found!</p>

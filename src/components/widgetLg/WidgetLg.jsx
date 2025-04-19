@@ -7,9 +7,9 @@ import { db } from "../../firebaseConfig";
 export default function WidgetLg() {
   const [recentSignups, setRecentSignups] = useState([]);
 
-  const Button = ({ type }) => {
-    return <button className={"widgetLgButton " + type}>{type}</button>;
-  };
+  // const Button = ({ type }) => {
+  //   return <button className={"widgetLgButton " + type}>{type}</button>;
+  // };
 
 
     // Fetch Recent Signups
@@ -19,8 +19,6 @@ export default function WidgetLg() {
       const unsubscribe = onSnapshot(q, (snapshot) => {
         setRecentSignups(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
       });
-
-      console.log(recentSignups.length);
       return () => unsubscribe();
     }, []);
 
