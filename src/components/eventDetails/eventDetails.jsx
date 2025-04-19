@@ -241,7 +241,7 @@ const EventDetailsPage = () => {
                           {sendingTicket ? <span className="loader"></span> : "Send Ticket"}
                         </button>)}
                       <span>      </span>
-                      {attendee.status === 'not checked in' && 
+                      {attendee.status === 'not checked in' && attendee.eventQr !== '' &&
                         (<button onClick={() => handleCheckIn(attendee.name, attendee.id)} disabled={checkingIn}>
                            {checkingIn ? <span className="loader"></span> : "Check In"}
                         </button>)}
