@@ -14,10 +14,12 @@ import CreateEvent from './components/createEvent/createEvent';
 import AttendeeList from './pages/productList/AttendeeList';
 import AdminQRScanner from './components/qrcodeScanner/adminQRScanner';
 import EventDetailsPage from './components/eventDetails/eventDetails';
+import AddAttendee from './components/addAttendee/addAttendee';
 
 
 function App() {
   const [editingEvent, setEditingEvent] = useState(null);
+  const [eventData, setEventData] = useState(null);
   
   return (
     <Router>
@@ -32,7 +34,8 @@ function App() {
             onCancel={(event) => setEditingEvent(event)}
             onUpdate={(updatedEvent) => {
               setEditingEvent(updatedEvent);}}/>} />
-          <Route exact path="/events/details/:eventId" element = {<EventDetailsPage />} />
+          <Route exact path="/events/details/:eventId" element = {<EventDetailsPage onAdd={(event) => setEventData(event)}/>} />
+          <Route exact path="/events/details/add_attendee" element = {<AddAttendee eventData={eventData} />} />
           <Route exact path="/createEvent" element = {<CreateEvent />} />
           <Route exact path="/attendees" element = {<AttendeeList />} />
           <Route exact path="/scan" element = {<AdminQRScanner />} />

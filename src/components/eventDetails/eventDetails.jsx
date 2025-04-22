@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../../firebaseConfig";
 import { doc, getDoc, collection, query, where, serverTimestamp, setDoc, onSnapshot } from "firebase/firestore";
 import "./eventDetails.css";
@@ -9,7 +9,7 @@ import emailjs from '@emailjs/browser';
 import ShortUniqueId from "short-unique-id";
 
 
-const EventDetailsPage = () => {
+const EventDetailsPage = ({onAdd}) => {
   const { eventId } = useParams();
   const [event, setEvent] = useState(null);
   const [attendees, setAttendees] = useState([]);
@@ -18,6 +18,7 @@ const EventDetailsPage = () => {
   const [sendingTicket, setSendingTicket] = useState(false);
   const canvasRef = useRef(null);
   const [qrCode, setqrCode] = useState('');
+  const navigate = useNavigate();
   // const [imageData, setImageData] = useState(null);
 
 
@@ -206,6 +207,10 @@ const EventDetailsPage = () => {
             </div>
 
           <h2>Attendees List</h2>
+          <button className="viewAllBtn" onClick={() => {
+            onAdd(event);
+            navigate("/events/details/add_attendee")}}>Add</button>
+
           {attendees.length === 0 ? (
             <p>No attendees have signed up yet.</p>
           ) : (
