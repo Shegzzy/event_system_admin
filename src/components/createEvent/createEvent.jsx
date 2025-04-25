@@ -157,7 +157,7 @@ const CreateEvent = () => {
         <input type="date" placeholder="Start Date" value={date} onChange={(e) => setDate(e.target.value)} required />
         <input type="date" placeholder="End Date" value={endDate} onChange={(e) => setDate(e.target.value)} />
         <input type="time" placeholder="Start Time" value={time} onChange={(e) => setTime(e.target.value)} required />
-        <input type="time" placeholder="End Time" value={endTime} onChange={(e) => setTime(e.target.value)} />
+        <input type="time" placeholder="End Time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
         <input type="text" placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)} required />
         <input type="number" placeholder="Audience Capacity" value={capacity} onChange={(e) => setCapacity(e.target.value)} required />
 
