@@ -155,6 +155,7 @@ export default function LoginPage() {
             navigate("/");
         } catch (error) {
             console.error("Login error:", error.message);
+            setStatus({ loading: false, error: 'Incorrect email or password', success: '' });
         }
     };
 
