@@ -2,7 +2,6 @@ import { createContext, useEffect, useReducer, useState } from "react";
 import AuthReducer from "./authReducer";
 import { auth } from "../firebaseConfig";
 import { Box, CircularProgress } from "@mui/material";
-import { AppProvider } from "@toolpad/core";
 
 const INITIAL_STATE = {
   currentUser: null

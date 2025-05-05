@@ -23,6 +23,7 @@ import { AuthContext } from '../../context/authContext';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../NNCL.png';
 import { useState } from 'react';
+import { useContext } from 'react';
 
 const providers = [{ id: 'credentials', name: 'Email and Password' }];
 
@@ -48,7 +49,7 @@ function CustomEmailField() {
 }
 
 function CustomPasswordField() {
-    const [showPassword, setShowPassword] = React.useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
@@ -129,7 +130,7 @@ const BRANDING = {
 
 export default function LoginPage() {
     const theme = useTheme();
-    const { dispatch } = React.useContext(AuthContext);
+    const { dispatch } = useContext(AuthContext);
     const [status, setStatus] = useState({ loading: false, error: '', success: '' });
     const navigate = useNavigate();
 
