@@ -13,13 +13,29 @@ import {
   // EventSharp,
   EventAvailable,
   HomeRounded,
+  Logout,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import { useState } from 'react';
+import { AuthContext } from "../../context/authContext";
+import { auth } from "../../firebaseConfig";
+import { useContext } from "react";
+import { IconButton } from "@mui/material";
 
 
 export default function Sidebar() {
   const [activeTab, setActiveTab] = useState("/");
+  const { dispatch } = useContext(AuthContext);
+
+
+  const logout = async () => {
+    try {
+      await auth.signOut();
+      dispatch({ type: "LOGOUT" });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   return (
     <div className="sidebar">
@@ -47,18 +63,24 @@ export default function Sidebar() {
             </Link>
 
             <Link to="/attendees" className="link" onClick={() => setActiveTab("attendees")}>
-            <li className={`sidebarListItem ${activeTab === "attendees" ? "active" : ""}`}>
-              <PermIdentity className="sidebarIcon" />
+              <li className={`sidebarListItem ${activeTab === "attendees" ? "active" : ""}`}>
+                <PermIdentity className="sidebarIcon" />
                 Attendees
               </li>
             </Link>
 
             <Link to="/scan" className="link" onClick={() => setActiveTab("scan")}>
-            <li className={`sidebarListItem ${activeTab === "scan" ? "active" : ""}`}>
-              <QrCodeScanner className="sidebarIcon" />
+              <li className={`sidebarListItem ${activeTab === "scan" ? "active" : ""}`}>
+                <QrCodeScanner className="sidebarIcon" />
                 Scan Code
               </li>
             </Link>
+
+            <IconButton onClick={logout} sx={{ fontSize: "1rem" }}>
+              <Logout className="sidebarIcon" />
+              Logout
+            </IconButton>
+
           </ul>
         </div>
       </div>

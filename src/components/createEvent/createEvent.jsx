@@ -17,47 +17,47 @@ const CreateEvent = () => {
   const [capacity, setCapacity] = useState("");
   const [mealOptions, setMealOptions] = useState([]);
   const [tables, setTables] = useState([]);
-  const [tableCapacity, setTableCapacity] = useState("");
+  // const [tableCapacity, setTableCapacity] = useState("");
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
 
-  // Add meal option
-  const handleAddMealOption = (e) => {
-    if (e.key === "Enter" && e.target.value.trim() !== "") {
-      setMealOptions([...mealOptions, e.target.value.trim()]);
-      e.target.value = "";
-    }
-  };
+  // // Add meal option
+  // const handleAddMealOption = (e) => {
+  //   if (e.key === "Enter" && e.target.value.trim() !== "") {
+  //     setMealOptions([...mealOptions, e.target.value.trim()]);
+  //     e.target.value = "";
+  //   }
+  // };
 
-  // Remove meal option
-  const handleRemoveMealOption = (meal) => {
-    setMealOptions(mealOptions.filter((m) => m !== meal));
-  };
+  // // Remove meal option
+  // const handleRemoveMealOption = (meal) => {
+  //   setMealOptions(mealOptions.filter((m) => m !== meal));
+  // };
 
   // Add a table
-  const handleAddTable = () => {
-    if (!tableCapacity) return;
-    const newTable = {
-      id: `table_${tables.length + 1}`,
-      capacity: parseInt(tableCapacity),
-      availableSeats: parseInt(tableCapacity),
-    };
-    setTables([...tables, newTable]);
-    setTableCapacity("");
-  };
+  // const handleAddTable = () => {
+  //   if (!tableCapacity) return;
+  //   const newTable = {
+  //     id: `table_${tables.length + 1}`,
+  //     capacity: parseInt(tableCapacity),
+  //     availableSeats: parseInt(tableCapacity),
+  //   };
+  //   setTables([...tables, newTable]);
+  //   setTableCapacity("");
+  // };
 
-  // Remove a table
-  const handleRemoveTable = (tableId) => {
-    setTables(tables.filter((table) => table.id !== tableId));
-  };
+  // // Remove a table
+  // const handleRemoveTable = (tableId) => {
+  //   setTables(tables.filter((table) => table.id !== tableId));
+  // };
 
-  // Handle image selection
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImage(URL.createObjectURL(file));
-    }
-  };
+  // // Handle image selection
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setImage(URL.createObjectURL(file));
+  //   }
+  // };
 
   // Upload image to Firebase Storage and return URL
   const uploadImage = async (image) => {
@@ -168,7 +168,7 @@ const CreateEvent = () => {
           onChange={handleImageChange}
           required
         /> */}
-        
+
         {/* Image Preview */}
         {image && (
           <div className="image-preview">
