@@ -13,6 +13,7 @@ import EventDetailsPage from "./components/eventDetails/eventDetails";
 import AddAttendee from "./components/addAttendee/addAttendee";
 import Layout from "./components/layout/layout";
 import ProtectedRoute from "./context/protectedRoutes";
+import ResetPasswordPage from "./pages/login/forgotPassword";
 
 function App() {
   const [editingEvent, setEditingEvent] = useState(null);
@@ -23,6 +24,7 @@ function App() {
       <Routes>
         {/* Public Route */}
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
         {/* Protected Routes with Layout */}
         <Route

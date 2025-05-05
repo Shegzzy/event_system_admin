@@ -8,6 +8,7 @@ import {
     Link,
     IconButton,
     Typography,
+    Alert,
 } from '@mui/material';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Visibility from '@mui/icons-material/Visibility';
@@ -21,6 +22,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { AuthContext } from '../../context/authContext';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../NNCL.png';
+import { useState } from 'react';
 
 const providers = [{ id: 'credentials', name: 'Email and Password' }];
 
@@ -88,7 +90,7 @@ function CustomPasswordField() {
 
 function ForgotPasswordLink() {
     return (
-        <Link href="/" variant="body2">
+        <Link href='/reset-password' variant="body2">
             Forgot password?
         </Link>
     );
@@ -98,11 +100,19 @@ function Title() {
     return <h2 style={{ marginBottom: 8 }}>Admin Login</h2>;
 }
 
-function Subtitle() {
+function Subtitle({ status }) {
     return (
         <Typography sx={{ mb: 2, px: 1, py: 0.25 }} variant='body2' color="text.secondary">
             Enter your email and password below.
+            {
+                status.error && (
+                    <Alert severity="error" sx={{ width: '100%', mt: 2 }}>
+                        {status.error}
+                    </Alert>
+                )
+            }
         </Typography>
+
     );
 }
 
@@ -120,6 +130,7 @@ const BRANDING = {
 export default function LoginPage() {
     const theme = useTheme();
     const { dispatch } = React.useContext(AuthContext);
+    const [status, setStatus] = useState({ loading: false, error: '', success: '' });
     const navigate = useNavigate();
 
     const handleLogin = async ({ formData }) => {
@@ -135,6 +146,7 @@ export default function LoginPage() {
             const adminSnap = await getDoc(adminRef);
 
             if (!adminSnap.exists()) {
+                setStatus({ loading: false, error: 'Unauthorized: You do not have admin access', success: '' });
                 throw new Error("Unauthorized: You do not have admin access");
             }
 
@@ -152,7 +164,7 @@ export default function LoginPage() {
                 signIn={(provider, formData) => handleLogin({ formData })}
                 slots={{
                     title: Title,
-                    subtitle: Subtitle,
+                    subtitle: () => (Subtitle({ status })),
                     emailField: CustomEmailField,
                     passwordField: CustomPasswordField,
                     forgotPasswordLink: ForgotPasswordLink,
