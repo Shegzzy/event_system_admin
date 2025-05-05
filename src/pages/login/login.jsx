@@ -137,6 +137,7 @@ export default function LoginPage() {
     const handleLogin = async ({ formData }) => {
 
         try {
+            setStatus({ loading: false, error: '', success: '' });
             let email = formData.get('email');
             let password = formData.get('password');
 
@@ -148,7 +149,7 @@ export default function LoginPage() {
 
             if (!adminSnap.exists()) {
                 setStatus({ loading: false, error: 'Unauthorized: You do not have admin access', success: '' });
-                throw new Error("Unauthorized: You do not have admin access");
+                return;
             }
 
             dispatch({ type: "LOGIN", payload: userCredential.user });
