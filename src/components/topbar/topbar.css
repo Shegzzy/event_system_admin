@@ -50,9 +50,9 @@
 }
 
 .topAvatar{
-    width: 40px;
+    width: 70px;
     height: 40px;
-    border-radius: 50%;
+    /* border-radius: 50%; */
     cursor: pointer;
     object-fit: cover;
     /* border: 2px solid #000; */
